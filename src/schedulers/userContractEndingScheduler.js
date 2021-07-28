@@ -4,6 +4,7 @@ const config = require('../config');
 const BetaGouv = require('../betagouv');
 const utils = require('../controllers/utils');
 const { renderHtmlFromMd } = require('../lib/mdtohtml');
+const knex = require('../db');
 
 // get users that are member (got a github card) and mattermost account that is not in the team
 const getRegisteredUsersWithEndingContractInXDays = async (days) => {
@@ -74,4 +75,31 @@ module.exports.sendContractEndingMessageToUsers = async (configName, users) => {
     registeredUsersWithEndingContractInXDays = await getRegisteredUsersWithEndingContractInXDays(messageConfig.days);
   }
   await Promise.all(registeredUsersWithEndingContractInXDays.map(async (user) => sendMessageOnChatAndEmail(user, messageConfig)));
+};
+
+module.exports.sendJ1EmailJob = async (optionalExpiredUsers) => {
+  let expiredUsers = optionalExpiredUsers;
+  const users = await BetaGouv.usersInfos();
+  if (!expiredUsers) {
+    expiredUsers = utils.getExpiredUsersForXDays(users, 1);
+  }
+  return Promise.all(
+    expiredUsers.map(async (user) => {
+      try {
+        const dbResponse = await knex('users').select('secondary_email').where({ username: user.id });
+        if (dbResponse.length === 1 && dbResponse[0].secondary_email) {
+          const email = dbResponse[0].secondary_email;
+          const messageContent = await ejs.renderFile('./views/emails/mailExpired1day', {
+            user,
+          });
+          await utils.sendMail(email, 'A bientôt 🙂', messageContent);
+        } else {
+          console.error(`Le compte ${user.id} n'a pas d'adresse secondaire`);
+        }
+        console.log(`Envoie du message fin de contrat +1 à ${email}`);
+      } catch (err) {
+        throw new Error(`Erreur d'envoi de mail à l'adresse indiquée ${err}`);
+      }
+    }),
+  );
 };

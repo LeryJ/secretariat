@@ -27,11 +27,22 @@ if (config.featureAddGithubUserToOrganization) {
   );
 }
 
-if (config.featureRemoveGithubUserFromOrganization) {
-  const { removeGithubUserFromOrganization } = require('./githubScheduler');
+if (config.featureSendJ1Email) {
+  const { sendJ1Email } = require('./userContractEndingScheduler');
+  const sendJ1EmailJob = new CronJob(
+    '0 8 * * * *',
+    sendJ1Email,
+    null,
+    true,
+    'Europe/Paris',
+  );
+}
 
+if (config.featureRemoveGithubUserFromOrganization) {
+  // j+1
+  const { removeGithubUserFromOrganization } = require('./githubScheduler');
   module.exports.removeGithubUserFromOrganization = new CronJob(
-    '0 0 * * * *',
+    '0 18 * * * *',
     removeGithubUserFromOrganization,
     null,
     true,
