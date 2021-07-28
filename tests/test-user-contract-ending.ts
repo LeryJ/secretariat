@@ -109,7 +109,6 @@ describe('send message on contract end to user', () => {
     nock(url)
     .get((uri) => uri.includes('authors.json'))
     .reply(200, betaGouvUsers)
-    .persist();
     const { sendContractEndingMessageToUsers } = userContractEndingScheduler;
     const result = await sendContractEndingMessageToUsers('mail15days');
     chat.calledOnce.should.be.true;
@@ -139,7 +138,6 @@ describe('send message on contract end to user', () => {
         }
       ]
     }])
-    .persist();
     const { sendJ1Email } = userContractEndingScheduler;
     const result = await sendJ1Email();
     sendEmailStub.calledOnce.should.be.true;
