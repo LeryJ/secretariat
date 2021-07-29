@@ -129,7 +129,7 @@
             <div class="form__group">
                 <label for="referentList">
                     <b>Référent (obligatoire)</b><br />
-                    Personne de la communauté avec qui tu es en contact.
+                    Personne de la communauté avec qui tu es en contact. Il ou elle sera automatiquement informé de la création de ta fiche et pourra la valider.
                 </label>
                 <% if(useSelectList) { %>
                     <select name="referent" id="username_select">
@@ -180,7 +180,7 @@
             <div class="form__group">
                 <label for="employer">
                     <strong>Employeur</strong><br />
-                    L'entité avec laquelle tu as signé ton contrat (DINUM, Octo...)
+                    L'entité avec laquelle tu as signé ton contrat (pour les indépendants : Octo, Numa...; pour les agents publics : DGFIP, Ministère des armées...)
                 </label>
                 <input name="employer" value="<%= formData.employer %>">
             </div>
@@ -188,8 +188,8 @@
             <div class="form__group">
                 <label for="badge">
                     <strong>Badge</strong><br />
-                    Si tu souhaites accéder aux bureaux, il te faudra un badge. Il te faudra aussi en faire la demande séparément.
-                    En cochant cette case, nous saurons que tu en fais la demande et le badge sera renouvellé automatiquement.
+                    Si tu souhaites travailler occasionnellement ou tous les jours dans les bureaux de beta.gouv (20 avenue de Segur à Paris), il te faudra un badge. Il te faudra aussi en faire la demande séparément.
+                    En cochant cette case, nous saurons que tu en fais la demande et le badge sera renouvelé automatiquement.
                 </label>
                 <select name="badge">
                     <option value=""></option>
